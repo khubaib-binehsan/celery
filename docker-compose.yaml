@@ -93,5 +93,17 @@ services:
       - scheduler
     command: [ "bash", "-c", "uv run airflow celery worker" ]
 
+  worker3:
+    image: airflow:celery
+    env_file:
+      - airflow.env
+    depends_on:
+      - scheduler
+    command:
+      - bash
+      - -c
+      - |
+        uv run airflow celery worker -q high_priority
+
 volumes:
   postgres_data:
