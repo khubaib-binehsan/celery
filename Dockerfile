@@ -13,7 +13,7 @@ WORKDIR /app
 RUN uv init --bare --python "${PYTHON_VERSION}"
 RUN uv venv --python "${PYTHON_VERSION}"
 RUN uv pip install "apache-airflow[celery]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
-RUN uv pip install redis psycopg2-binary
+RUN uv pip install kombu psycopg2-binary
 
 COPY dags/ /app/dags/
 

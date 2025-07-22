@@ -10,10 +10,18 @@ services:
     pull_policy: never
     command: [ "/bin/true" ]
 
-  redis:
-    image: redis:6
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    environment:
+      RABBITMQ_DEFAULT_USER: airflow
+      RABBITMQ_DEFAULT_PASS: airflow
+      RABBITMQ_PLUGINS: rabbitmq_stream
     ports:
-      - "6379:6379"
+      - "5672:5672" # AMQP port
+      - "15672:15672" # Management UI
+      - "5552:5552" # Stream protocol port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
   postgres:
     image: postgres:16.4
     environment:
@@ -29,7 +37,7 @@ services:
       - airflow.env
     depends_on:
       - postgres
-      - redis
+      - rabbitmq
     command:
       - bash
       - -c
@@ -107,3 +115,4 @@ services:
 
 volumes:
   postgres_data:
+  rabbitmq_data:
